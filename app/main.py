@@ -1,9 +1,22 @@
 from functools import lru_cache
 
+import pika
 from fastapi import FastAPI
 
 from app.core import config
 from app.routers import authentication, role, user
+
+connection = pika.BlockingConnection(pika.ConnectionParameters(host='localhost'))
+channel = connection.channel()
+
+channel.queue_declare(queue='hello')
+
+channel.basic_publish(exchange='',
+                      routing_key='hello',  # the queue name
+                      body='Hello World!')
+print(" [x] Sent 'Hello World!'")
+
+connection.close()
 
 app = FastAPI()
 
