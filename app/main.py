@@ -1,10 +1,7 @@
-from functools import lru_cache
-
 import pika
 from fastapi import FastAPI
 
-from app.core import config
-from app.routers import authentication, role, user
+from .routers import *
 
 connection = pika.BlockingConnection(pika.ConnectionParameters(host='localhost'))
 channel = connection.channel()
@@ -20,15 +17,9 @@ connection.close()
 
 app = FastAPI()
 
-
-@lru_cache()
-def get_settings():
-    return config.Settings()
-
-
-app.include_router(user.router)
-app.include_router(role.router)
-app.include_router(authentication.router)
+app.include_router(userrouter.router)
+app.include_router(rolerouter.router)
+app.include_router(authenticationrouter.router)
 
 users = []
 

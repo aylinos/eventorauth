@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
 
-from app.models import role
+from ..models import role
 
 
 def get_all(db: Session):

@@ -1,9 +1,9 @@
 from fastapi import HTTPException, status
 from sqlalchemy.orm import Session
 
-from app.auth.hashing import Hash
-from app.models import user
-from app.schemas import userschema
+from ..auth.hashing import Hash
+from ..models import user
+from ..schemas import userschema
 
 
 def get_all(db: Session):

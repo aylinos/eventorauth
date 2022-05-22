@@ -1,7 +1,5 @@
 from pydantic import BaseModel
 
-from app.schemas.roleschema import ShowRole
-
 
 # Pydantic model: properties required during user creation
 class UserBase(BaseModel):
