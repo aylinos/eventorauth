@@ -23,8 +23,6 @@ app.include_router(authenticationrouter.router)
 
 users = []
 
-# response_model = pydantic model = response_schema
-
 
 # Index route
 @app.get("/")
