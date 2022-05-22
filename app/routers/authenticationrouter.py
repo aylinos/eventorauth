@@ -18,7 +18,7 @@ def login(request: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(
     if not user_tolog:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail=f"Invalid credentials")
-    if not Hash.verify(user_tolog.hashed_password, request.password):
+    if not Hash.verify(user_tolog.password, request.password):
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail=f"Incorrect password")
 

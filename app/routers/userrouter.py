@@ -1,6 +1,6 @@
 from typing import List
 
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, status
 from sqlalchemy.orm import Session
 
 from ..auth import oauth2
@@ -14,22 +14,32 @@ router = APIRouter(
 )
 
 
-@router.get("/", response_model=List[userschema.ShowUser])
-def all_users(db: Session = Depends(get_db), current_user: userschema.UserBase = Depends(oauth2.get_current_user)):
+@router.get("/", response_model=List[userschema.UserOut])
+def get_all_users(db: Session = Depends(get_db), current_user: userschema.UserIn = Depends(oauth2.get_current_user)):
     return userrepo.get_all(db)
 
 
-# User Signup [ Create a new user ]
-@router.post("/signup", response_model=userschema.ShowUser)
-def user_signup(request: userschema.UserBase, db: Session = Depends(get_db)):
-    return userrepo.create(request, db)
+@router.get("/{id}", response_model=userschema.UserOut)
+def get_one_user(id: int, db: Session = Depends(get_db), current_user: userschema.UserIn = Depends(oauth2.get_current_user)):
+    return userrepo.get_one(id, db)
 
 
-@router.get("/me", response_model=userschema.ShowUser)
-async def read_users_me(current_user: userschema.UserBase = Depends(oauth2.get_current_user)):
+@router.get("/me", response_model=userschema.UserOut)
+async def read_users_me(current_user: userschema.UserIn = Depends(oauth2.get_current_user)):
     return current_user
 
 
-@router.get("/{id}", response_model=userschema.ShowUser)
-def get_user(id: int, db: Session = Depends(get_db), current_user: userschema.UserBase = Depends(oauth2.get_current_user)):
-    return userrepo.get_one(id, db)
+# User Signup [ Create a new user ]
+@router.post("/signup", response_model=userschema.UserOut)
+def user_signup(request: userschema.UserIn, db: Session = Depends(get_db)):
+    return userrepo.create(request, db)
+
+
+@router.put("/{id}", response_model=userschema.UserOut)
+def update_user(id: int, request: userschema.UserUpdate, db: Session = Depends(get_db)):
+    return userrepo.update(id, request, db)
+
+
+@router.delete('/{id}', status_code=status.HTTP_204_NO_CONTENT)
+def destroy_user(id: int, db: Session = Depends(get_db)):
+    return userrepo.destroy(id, db)

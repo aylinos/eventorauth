@@ -12,7 +12,7 @@ class User(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     email = Column(String, unique=True, index=True, nullable=False)
-    hashed_password = Column(String, nullable=False)
+    password = Column(String, nullable=False)
     name = Column(String(256), nullable=False)
     role = Column(Integer, ForeignKey("roles.id"), nullable=False)
     date_created = Column(DateTime, default=datetime.datetime.utcnow)

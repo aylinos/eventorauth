@@ -20,3 +20,10 @@ class RoleOut(RoleIn):
 
     class Config:
         orm_mode = True
+
+
+class NestedRoleOut(RoleIn):
+    id: int
+
+    class Config:
+        orm_mode = True

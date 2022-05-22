@@ -15,7 +15,7 @@ router = APIRouter(
 
 
 @router.get("/", response_model=List[roleschema.RoleOut])
-def get_all(db: Session = Depends(get_db), current_user: userschema.UserBase = Depends(oauth2.get_current_user)):
+def get_all(db: Session = Depends(get_db), current_user: userschema.UserIn = Depends(oauth2.get_current_user)):
     return rolerepo.get_all(db)
 
 
