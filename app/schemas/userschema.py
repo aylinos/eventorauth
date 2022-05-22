@@ -18,6 +18,10 @@ class UserUpdate(BaseModel):
     email: Optional[str]
 
 
+class UserRoleUpdate(BaseModel):
+    role: Optional[int]
+
+
 # Get users from db
 class UserOut(BaseModel):
     id: int
@@ -33,3 +37,7 @@ class UserOut(BaseModel):
 class UserLogin(BaseModel):
     email: str
     password: str
+
+
+class UserVerify(BaseModel):
+    email: str

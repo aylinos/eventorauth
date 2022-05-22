@@ -2,12 +2,7 @@ import os
 from datetime import datetime, timedelta
 
 from dotenv import load_dotenv
-from fastapi import Depends
 from jose import JWTError, jwt
-from sqlalchemy.orm import Session
-
-from app.db.session import get_db
-from app.schemas import tokenschema
 
 load_dotenv()
 
@@ -24,12 +19,14 @@ def create_access_token(data: dict):
     return encoded_jwt
 
 
-def verify_token(token: str, credentials_exception, db: Session = Depends(get_db)):
+def verify_token(token: str, credentials_exception):
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
         email: str = payload.get("sub")
+        print("payload: " + email)
         if email is None:
             raise credentials_exception
-        token_data = tokenschema.TokenData(email=email)
+
+        return email
     except JWTError:
         raise credentials_exception

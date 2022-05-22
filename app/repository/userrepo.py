@@ -5,6 +5,9 @@ from ..auth.hashing import Hash
 from ..models import user
 from ..schemas import userschema
 
+notfound_exception = HTTPException(status_code=status.HTTP_404_NOT_FOUND,
+                                   detail=f"User not found")
+
 
 def get_all(db: Session):
     users = db.query(user.User).all()
@@ -12,10 +15,13 @@ def get_all(db: Session):
 
 
 def get_one(id: int, db: Session):
-    found_user = db.query(user.User).filter(user.User.id == id).first()
+    return find_user(id, db).first()
+
+
+def get_one_token(email: str, db: Session):
+    found_user = db.query(user.User).filter(user.User.email == email).first()
     if not found_user:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
-                            detail=f"User with id: {id} is not available")
+        raise notfound_exception
     return found_user
 
 
@@ -28,27 +34,30 @@ def create(request: userschema.UserIn, db: Session):
     return new_user
 
 
+def update_user_role(id: int, request: userschema.UserUpdate, db: Session):
+    return updates_on_user(id, request, db)
+
+
 def update(id: int, request: userschema.UserUpdate, db: Session):
-    found_user = db.query(user.User).filter(user.User.id == id)
-
-    if not found_user.first():
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
-                            detail=f"User with id {id} not found")
-
-    # Check if user from cookie is the same as creator in found_event or is admin
-    found_user.update(request.dict(exclude_unset=True))
-    db.commit()
-    return found_user.first()
+    return updates_on_user(id, request, db)
 
 
 def destroy(id: int, db: Session):
-    found_user = db.query(user.User).filter(user.User.id == id)
-
-    if not found_user.first():
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
-                            detail=f"User with id {id} not found")
-
-    # Check if user from cookie is the same as creator in found_event or is admin
+    found_user = find_user(id, db)
     found_user.delete(synchronize_session=False)
     db.commit()
     return True
+
+
+def find_user(id: int, db: Session):
+    found_user = db.query(user.User).filter(user.User.id == id)
+    if not found_user.first():
+        raise notfound_exception
+    return found_user
+
+
+def updates_on_user(id: int, request: userschema.UserUpdate, db: Session):
+    found_user = find_user(id, db)
+    found_user.update(request.dict(exclude_unset=True))
+    db.commit()
+    return found_user.first()

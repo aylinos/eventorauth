@@ -1,1 +1,1 @@
-from ..schemas import roleschema, tokenschema, userschema
+from ..schemas import roleschema, userschema
