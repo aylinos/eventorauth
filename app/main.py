@@ -1,19 +1,20 @@
 import pika
 from fastapi import FastAPI
+from mangum import Mangum  # Amazon Lambda handler
 
 from .routers import *
 
-connection = pika.BlockingConnection(pika.ConnectionParameters(host='localhost'))
-channel = connection.channel()
-
-channel.queue_declare(queue='hello')
-
-channel.basic_publish(exchange='',
-                      routing_key='hello',  # the queue name
-                      body='Hello World!')
-print(" [x] Sent 'Hello World!'")
-
-connection.close()
+# connection = pika.BlockingConnection(pika.ConnectionParameters(host='localhost'))
+# channel = connection.channel()
+#
+# channel.queue_declare(queue='hello')
+#
+# channel.basic_publish(exchange='',
+#                       routing_key='hello',  # the queue name
+#                       body='Hello World!')
+# print(" [x] Sent 'Hello World!'")
+#
+# connection.close()
 
 app = FastAPI()
 
@@ -30,6 +31,7 @@ def read_root():
     return {"Eventor": "Welcome to Eventor website"}
 
 
+handler = Mangum(app=app)
 # def check_user(data: UserLoginSchema):
 #     for user in users:
 #         if user.email == data.email and user.password == data.password:
