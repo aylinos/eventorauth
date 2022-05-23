@@ -26,7 +26,7 @@ users = []
 
 
 # Index route
-@app.get("/")
+@app.get("/home")
 def read_root():
     return {"Eventor": "Welcome to Eventor website"}
 
