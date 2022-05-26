@@ -28,4 +28,4 @@ jobs:
           sam package --s3-bucket eventorbucket --output-template-file out.yml --region eu-central-1
       - name: Deploy to AWS Lambda
         run: |
-          sam deploy --template-file out.yml --stack-name eventor-users --region eu-central-1 --no-fail-on-empty-changeset --capabilities CAPABILITY_IAM
+          sam deploy --template-file out.yml --stack-name eventor-users-ms --region eu-central-1 --no-fail-on-empty-changeset --capabilities CAPABILITY_IAM

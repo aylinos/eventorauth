@@ -26,9 +26,9 @@ users = []
 
 
 # Index route
-@app.get("/home")
+@app.get("/")
 def read_root():
-    return {"Eventor": "Welcome to Eventor website"}
+    return {"Eventor": "Welcome to USERS service"}
 
 
 handler = Mangum(app=app)
