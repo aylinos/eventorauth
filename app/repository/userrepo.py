@@ -7,6 +7,8 @@ from ..schemas import userschema
 
 notfound_exception = HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                                    detail=f"User not found")
+already_exists_exception = HTTPException(status_code=status.HTTP_409_CONFLICT,
+                                         detail=f"Email already registered")
 
 
 def get_all(db: Session):
@@ -26,6 +28,9 @@ def get_one_token(email: str, db: Session):
 
 
 def create(request: userschema.UserIn, db: Session):
+    found_user = db.query(user.User).filter(user.User.email == request.email).first()
+    if found_user:
+        raise already_exists_exception
     new_user = user.User(name=request.name, email=request.email, password=Hash.bcrypt(request.password),
                          role=2)
     db.add(new_user)
