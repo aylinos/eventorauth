@@ -20,7 +20,7 @@ unauthorized_exception = HTTPException(
 )
 
 
-@router.get("/", response_model=List[roleschema.RoleOut])
+@router.get("", response_model=List[roleschema.RoleOut])
 def get_all(db: Session = Depends(get_db), current_user_email: userschema.UserIn = Depends(oauth2.get_current_user_email)):
     current_user = userrepo.get_one_token(current_user_email, db)
     if current_user.role == 1:
@@ -36,7 +36,7 @@ def get_one(id: int, db: Session = Depends(get_db), current_user_email: usersche
     raise unauthorized_exception
 
 
-@router.post("/", response_model=roleschema.RoleOut)
+@router.post("", response_model=roleschema.RoleOut)
 def create(request: roleschema.RoleIn, db: Session = Depends(get_db), current_user_email: userschema.UserIn = Depends(oauth2.get_current_user_email)):
     current_user = userrepo.get_one_token(current_user_email, db)
     if current_user.role == 1:

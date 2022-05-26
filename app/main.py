@@ -26,7 +26,7 @@ users = []
 
 
 # Index route
-@app.get("/")
+@app.get("/u")
 def read_root():
     return {"Eventor": "Welcome to USERS service"}
 
