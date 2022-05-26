@@ -9,11 +9,14 @@ Resources:
             Environment:
                 Variables:
                     DB_URI: postgresql://eventor:eventor_s6@eventor.ctafcc3bhwfo.eu-central-1.rds.amazonaws.com:5432/eventorusers
+                    SECRET_KEY: 09d25e094faa6ca2556c818166b7a9563b93f7099f6f0f4caa6cf63b88e8d3e7
+                    ALGORITHM: HS256
+                    ACCESS_TOKEN_EXPIRE_MINUTES: 30
             Events:
                 ApiEvent:
                     Properties:
                         RestApiId:
-                            Ref: EventorEvents
+                            Ref: EventorUsers
                         Path: /{proxy+}
                         Method: ANY
                     Type: Api
@@ -28,7 +31,7 @@ Resources:
             # https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/sam-specification-template-anatomy-globals.html#sam-specification-template-anatomy-globals-supported-resources-and-properties
             Role: !Sub arn:aws:iam::${AWS::AccountId}:role/lambdaRole
 
-    EventorEvents:
+    EventorUsers:
         Type: AWS::Serverless::Api
         Properties:
             StageName: prod
