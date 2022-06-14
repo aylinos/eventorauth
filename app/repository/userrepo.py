@@ -20,6 +20,10 @@ def get_one(id: int, db: Session):
     return find_user(id, db).first()
 
 
+def get_by_email(email: str, db: Session):
+    return find_user_by_email(email, db).first()
+
+
 def get_one_token(email: str, db: Session):
     found_user = db.query(user.User).filter(user.User.email == email).first()
     if not found_user:
@@ -56,6 +60,13 @@ def destroy(id: int, db: Session):
 
 def find_user(id: int, db: Session):
     found_user = db.query(user.User).filter(user.User.id == id)
+    if not found_user.first():
+        raise notfound_exception
+    return found_user
+
+
+def find_user_by_email(email: str, db: Session):
+    found_user = db.query(user.User).filter(user.User.email == email)
     if not found_user.first():
         raise notfound_exception
     return found_user

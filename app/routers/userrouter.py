@@ -20,6 +20,11 @@ unauthorized_exception = HTTPException(
 )
 
 
+@router.get("/id")
+def get_current_user_email(db: Session = Depends(get_db), current_user_email: userschema.UserIn = Depends(oauth2.get_current_user_email)):
+    return userrepo.get_by_email(current_user_email, db).id
+
+
 @router.get("", response_model=List[userschema.UserOut])
 def get_all_users(db: Session = Depends(get_db), current_user_email: userschema.UserIn = Depends(oauth2.get_current_user_email)):
     return userrepo.get_all(db)
